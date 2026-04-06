@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Feray 💖</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  overflow: hidden;
+  background: black;
+  color: white;
+  text-align: center;
+}
+
+/* Şifre ekranı */
+#lockScreen {
+  position: fixed;
+  inset: 0;
+  background: #191970;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  padding: 15px 30px;
+  margin: 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#yes { background: green; color: white; }
+#no { background: red; color: white; position: absolute; }
+
+/* Zarf animasyonu */
+#envelope {
+  position: fixed;
+  inset: 0;
+  background: #191970;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-size: 100px;
+  display: none;
+  transition: opacity 1.5s;
+  color: #ffcccc;
+  flex-direction: column;
+}
+
+/* Evet/Hayır ekranı */
+#content {
+  display: none;
+  background-color: #191970;
+  min-height: 100vh;
+  padding-top: 50px;
+}
+
+#gallery {
+  display: none;
+  background-color: #150a2f; /* Sadece bu renk olacak */
+  padding: 20px 0;
+}
+
+img {
+  width: 85%;
+  max-width: 400px;
+  border-radius: 20px;
+  margin: 10px;
+  opacity: 0;
+  transition: 1s;
+}
+
+#message { font-size: 24px; margin-top: 20px; }
+
+#movingText {
+  font-size: 32px;
+  color: #8B0000; /* Koyu kırmızı */
+  font-weight: bold;
+  white-space: nowrap;
+  display: none;
+  animation: popPulse 2s ease-in-out infinite;
+  margin-top: 20px;
+}
+
+@keyframes popPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.heart {
+  position: absolute;
+  color: red;
+  animation: float 4s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-10vh); }
+}
+</style>
+</head>
+<body>
+
+<!-- Şifre -->
+<div id="lockScreen">
+  <h2>Şifreyi Giriniz 💌</h2>
+  <input type="password" id="password" placeholder="Şifre">
+  <button onclick="checkPassword()">Giriş</button>
+  <p id="error" style="color:red;"></p>
+</div>
+
+<!-- Zarf eski basit emoji -->
+<div id="envelope">💌</div>
+
+<!-- İçerik -->
+<div id="content">
+<h1>Beni seviyor musun? 💖</h1>
+<button id="yes">Evet 🫀💞</button>
+<button id="no">Hayır 😢😭</button>
+
+<div id="gallery">
+  <img src="foto1.jpg">
+  <img src="foto2.jpg">
+  <img src="foto3.jpg">
+</div>
+
+<div id="message"></div>
+<div id="movingText">Sen Benim Karanlık Gecelerime Doğan, İçimi Aydınlatan FERAY'ımsın (Ay Işığımsın) ❤️😘💕</div>
+
+<audio id="music" src="sarki.mp3"></audio>
+</div>
+
+<script>
+// Şifre kontrolü
+const correctPassword = "15082025";
+
+function checkPassword() {
+  const input = document.getElementById("password").value;
+  if(input === correctPassword){
+    document.getElementById("lockScreen").style.display = "none";
+    const envelope = document.getElementById("envelope");
+    envelope.style.display = "flex";
+    setTimeout(() => {
+      envelope.style.display = "none";
+      document.getElementById("content").style.display = "block";
+    }, 1500); // kısa zarf gösterimi
+  } else {
+    document.getElementById("error").innerText = "Yanlış şifre 😢";
+  }
+}
+
+// Hayır butonu
+const noBtn = document.getElementById("no");
+noBtn.onmouseover = () => {
+  noBtn.style.top = Math.random()*80 + "%";
+  noBtn.style.left = Math.random()*80 + "%";
+};
+
+// Evet butonu
+document.getElementById("yes").onclick = () => {
+  const music = document.getElementById("music");
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  music.play().catch(()=>alert("Müziği çalmak için tekrar tıklayın 🎵"));
+
+  document.querySelector("h1").style.display = "none";
+  document.getElementById("yes").style.display = "none";
+  document.getElementById("no").style.display = "none";
+
+  const gallery = document.getElementById("gallery");
+  gallery.style.display = "block";
+  let imgs = document.querySelectorAll("img");
+  imgs.forEach((img, i) => {
+    setTimeout(() => {
+      img.style.opacity = 1;
+      if(i === imgs.length-1){
+        setTimeout(()=>{
+          document.getElementById("movingText").style.display = "block";
+        }, 1000);
+      }
+    }, i*1500);
+  });
+
+  setTimeout(()=>{document.getElementById("message").innerText="Gökyüzünde Ay Yeryüzünde Feray 💖";},5000);
+
+  setInterval(()=>{
+    let heart = document.createElement("div");
+    heart.innerText = "❤️";
+    heart.className="heart";
+    heart.style.left = Math.random()*100+"vw";
+    heart.style.fontSize = Math.random()*20+20+"px";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),4000);
+  },300);
+};
+</script>
+
+</body>
+</html>
